@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
+import Button from 'react-bootstrap/Button';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 
 class App extends Component {
   constructor (props){
@@ -9,7 +15,7 @@ class App extends Component {
       restOfForm: false,
       floorToCeiling: true,
       height: '',
-      heightDiscount: 1,
+      heightCharge: 1,
       width: '',
       quote: 0,
       finish: 'unfinished',
@@ -69,7 +75,7 @@ class App extends Component {
       this.setState({ side })
     }else if (event.target.name === 'finish'){
       let finish = event.target.value
-      finishCharge = (finish === 'unfinished')? 0: //pine no extra, oak/maple/birch *1.1, cherry *1.25
+      finishCharge = (finish === 'unfinished')? 0: //plain is 0, painted/clear finish is 500, matched stain is 1000 extra.
       (finish === 'match')? 1000: 500 
       this.setState({ finish })
       this.setState({ finishCharge })
@@ -98,13 +104,34 @@ class App extends Component {
       }else{
         this.updateQuote(event)
       }
-      //event.preventDefault();
     }
   }
 
   render() {
     return (
       <div className="App">
+        <Navbar bg="light" expand="lg">
+        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link href="#link">Link</Nav.Link>
+            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+          <Form inline>
+            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+            <Button variant="outline-success">Search</Button>
+          </Form>
+        </Navbar.Collapse>
+      </Navbar>
+      
         Your (ongoing) quote: ${this.state.quote}
         <div>height: {this.state.height}</div>
         <div>width: {this.state.width}</div>
