@@ -45,7 +45,9 @@ class App extends Component {
     event.preventDefault()
     this.setState({
       height: event.target.value,
-      heightDiscount : event.target.value < 48 ? .75:1
+      heightCharge : event.target.value > 96 ? 1.15 : 
+        event.target.value > 60 ? 1 :
+        event.target.value > 48 ? .80 : .70
     })
   }
 
@@ -73,12 +75,12 @@ class App extends Component {
       this.setState({ finishCharge })
     }
     let width = Math.ceil(this.state.width/12)
-    let heightDiscount = this.state.heightDiscount
+    let heightCharge = this.state.heightCharge
     let baselinePricePerFoot = 1000
     woodCharge = woodCharge ? woodCharge : this.state.woodCharge
     sideCharge = (sideCharge ===0 || sideCharge ) ? sideCharge : this.state.sideCharge
     finishCharge = (finishCharge ===0 || finishCharge ) ? finishCharge : this.state.finishCharge
-    let quote = width * baselinePricePerFoot * woodCharge + sideCharge + finishCharge
+    let quote = Math.ceil(heightCharge * width * baselinePricePerFoot * woodCharge + sideCharge + finishCharge)
     this.setState({ quote })
   };
 
@@ -87,12 +89,6 @@ class App extends Component {
     this.setState({width: event.target.value})
   }
 
-  handleFinish = event =>{
-    this.setState({ finish: event.target.value})
-  }
-  handleSideChange = event =>{
-    this.setState({ side: event.target.value})
-  }
   handleEnter = event => {
     if (event.keyCode === 13) {
       const form = event.target.form;
