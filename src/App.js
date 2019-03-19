@@ -13,8 +13,12 @@ class App extends Component {
       width: '',
       quote: 0,
       finish: 'unfinished',
+      finishCharge: 0,
       wood: 'pine',
+      woodCharge:'1',
       side: 'plain',
+      sideCharge: 0,
+
     }
   }
 
@@ -46,25 +50,41 @@ class App extends Component {
   }
 
   updateQuote = event =>{
-    event.preventDefault()
+    //event.preventDefault()
+    let woodCharge
+    let sideCharge
+    let finishCharge
+    if(event.target.name === 'wood'){
+      let wood = event.target.value
+      woodCharge = (wood === 'pine')? 1: //pine no extra, oak/maple/birch *1.1, cherry *1.25
+        (wood === 'cherry')? 1.25: 1.10 
+      this.setState({ wood })
+      this.setState({ woodCharge })
+    }else if (event.target.name === 'side'){
+      let side = event.target.value
+      sideCharge = (side === 'plain')? 0: 500//plain is 0, fancy is +$500
+      this.setState({ sideCharge })
+      this.setState({ side })
+    }else if (event.target.name === 'finish'){
+      let finish = event.target.value
+      finishCharge = (finish === 'unfinished')? 0: //pine no extra, oak/maple/birch *1.1, cherry *1.25
+      (finish === 'match')? 1000: 500 
+      this.setState({ finish })
+      this.setState({ finishCharge })
+    }
     let width = Math.ceil(this.state.width/12)
     let heightDiscount = this.state.heightDiscount
     let baselinePricePerFoot = 1000
-    let wood = this.state.wood
-    let woodPremium = (wood === 'pine')? 1: //pine no extra, oak/maple/birch *1.1, cherry *1.25
-      (wood === 'cherry')? 1.25: 1.10
-    let quote = width * baselinePricePerFoot * woodPremium
-    console.log('oldmanneill',quote)
+    woodCharge = woodCharge ? woodCharge : this.state.woodCharge
+    sideCharge = (sideCharge ===0 || sideCharge ) ? sideCharge : this.state.sideCharge
+    finishCharge = (finishCharge ===0 || finishCharge ) ? finishCharge : this.state.finishCharge
+    let quote = width * baselinePricePerFoot * woodCharge + sideCharge + finishCharge
     this.setState({ quote })
   };
 
   handleWidthChange = event => {
     event.preventDefault()
     this.setState({width: event.target.value})
-  }
-
-  handleWoodType = event =>{
-    this.setState({ wood: event.target.value})
   }
 
   handleFinish = event =>{
@@ -135,55 +155,55 @@ class App extends Component {
                     name="finish" 
                     value="unfinished" 
                     checked={this.state.finish==="unfinished"}
-                    onChange={this.handleFinish} />Unfinished
+                    onChange={this.updateQuote} />Unfinished
             <input  type="radio" 
                     name="finish" 
                     value="painted" 
                     checked={this.state.finish==="painted"}
-                    onChange={this.handleFinish} />Painted
+                    onChange={this.updateQuote} />Painted
             <input  type="radio" 
                     name="finish" 
                     value="natural" 
                     checked={this.state.finish==="natural"}
-                    onChange={this.handleFinish} />Natural wood with clearcoat finish
+                    onChange={this.updateQuote} />Natural wood with clearcoat finish
             <input  type="radio" 
                     name="finish" 
-                    value="stained" 
+                    value="match" 
                     checked={this.state.finish==="stained"}
-                    onChange={this.handleFinish} />Stained
+                    onChange={this.updateQuote} />Matched stain
 
             <div>What kind of wood?</div>
             <input  type="radio" 
                     name="wood" 
                     value="pine" 
                     checked={this.state.wood==="pine"}
-                    onChange={this.handleWoodType} />Pine
+                    onChange={this.updateQuote} />Pine
             <input  type="radio" 
                     name="wood" 
                     value="maple"
                     checked={this.state.wood==="maple"}
-                    onChange={this.handleWoodType} />Maple/Birch
+                    onChange={this.updateQuote} />Maple/Birch
             <input  type="radio" 
                     name="wood" 
                     value="oak"
                     checked={this.state.wood==="oak"}
-                    onChange={this.handleWoodType} />Oak
+                    onChange={this.updateQuote} />Oak
             <input  type="radio" 
                     name="wood" 
                     value="cherry"
                     checked={this.state.wood==="cherry"}
-                    onChange={this.handleWoodType} />Cherry
+                    onChange={this.updateQuote} />Cherry
             <div>Fancy or plain side?</div>
             <input  type="radio" 
                     name="side" 
                     value="plain" 
                     checked={this.state.side==="plain"}
-                    onChange={this.handleSideChange} />Plain
+                    onChange={this.updateQuote} />Plain
             <input  type="radio" 
                     name="side" 
                     value="fancy" 
                     checked={this.state.side==="fancy"}
-                    onChange={this.handleSideChange} />Fancy
+                    onChange={this.updateQuote} />Fancy
           </form>
           
         </div>} 
